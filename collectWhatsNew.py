@@ -4,12 +4,15 @@ import requests
 from requests.models import PreparedRequest
 from urllib.parse import quote
 import json
+import logging
 
+logging.basicConfig(level=logging.INFO, format='%(asctime)s:%(levelname)s:%(message)s')
 directory = "aws-whats-new"
 account = boto3.client('sts').get_caller_identity().get('Account')
 ids_url = "https://aws.amazon.com/api/dirs/typeahead-suggestions/items"
 item_url = "https://aws.amazon.com/api/dirs/items/search/"
 s3 = boto3.resource('s3')
+
 
 # Create a function to create a bucket only if it doesn't exist
 def create_bucket(bucket_name):
@@ -24,7 +27,7 @@ def write_json(pjson, bucket_name, key):
 def get_json(url, params):
     req = PreparedRequest()
     req.prepare_url(url, params)
-    # print(req.url)
+    logging.debug(req.url)
     return requests.get(req.url).json()
 
 # Create bucket if it doesn't already exist
@@ -33,7 +36,7 @@ create_bucket("{}-{}".format(directory, account))
 # For each id, make a request to get the items for that id
 for id in get_json(ids_url, {'limit':  500})["items"]:
     simple_id = id['id'].replace("typeahead-suggestions#", "")
-    print(simple_id)
+    logging.info("Getting items for {}".format(simple_id))
     params = {
         'item.directoryId': 'whats-new',
         'sort_by': 'item.additionalFields.postDateTime',
