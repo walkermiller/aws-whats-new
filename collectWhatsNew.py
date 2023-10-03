@@ -5,6 +5,7 @@ from requests.models import PreparedRequest
 from urllib.parse import quote
 import json
 import logging
+import time
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s:%(levelname)s | %(message)s')
 directory = "aws-whats-new"
@@ -33,6 +34,10 @@ def get_json(url, params):
 # Create bucket if it doesn't already exist
 create_bucket("{}-{}".format(directory, account))
 
+# Record start time
+start_time = time.time()
+
+# Get all the ids
 # For each id, make a request to get the items for that id
 for id in get_json(ids_url, {'limit':  500})["items"]:
     simple_id = id['id'].replace("typeahead-suggestions#", "")
@@ -51,6 +56,10 @@ for id in get_json(ids_url, {'limit':  500})["items"]:
         write_json(item_news, "{}-{}".format(directory, account), "{}.json".format(simple_id))
     else:
         logging.info("No items found for {}".format(simple_id))
+
+# Log time difference
+end_time = time.time()
+logging.info("Time elapsed: {} seconds".format(end_time - start_time))
 
                                                                              
 
