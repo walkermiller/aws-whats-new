@@ -20,7 +20,7 @@ def create_bucket(bucket_name):
 def write_json(pjson, bucket_name, key): 
     s3.Object(bucket_name, key).put(Body=json.dumps(pjson).encode('utf-8'))
 
-# create a function that makes an https request to a url and recieved json
+# create a function that makes an https request to a url and recieves json
 def get_json(url, params):
     req = PreparedRequest()
     req.prepare_url(url, params)
@@ -31,7 +31,7 @@ create_bucket("{}-{}".format(directory, account))
 
 for id in get_json(ids_url, {'limit':  500})["items"]:
     simple_id = id['id'].replace("typeahead-suggestions#", "")
-    print(simple_id)
+    #print(simple_id)
     params = {
         'item.directoryId': 'whats-new',
         'sort_by': 'item.additionalFields.postDateTime',
