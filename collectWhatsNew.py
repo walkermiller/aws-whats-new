@@ -11,24 +11,26 @@ ids_url = "https://aws.amazon.com/api/dirs/typeahead-suggestions/items"
 item_url = "https://aws.amazon.com/api/dirs/items/search/"
 s3 = boto3.resource('s3')
 
-# create a function to create a bucket only if it doesn't exist
+# Create a function to create a bucket only if it doesn't exist
 def create_bucket(bucket_name):
     if s3.Bucket(bucket_name) not in s3.buckets.all():
         s3.create_bucket(Bucket=bucket_name)
 
-# create a function that writes pjson to an s3 object
+# Create a function that writes pjson to an s3 object
 def write_json(pjson, bucket_name, key): 
     s3.Object(bucket_name, key).put(Body=json.dumps(pjson).encode('utf-8'))
 
-# create a function that makes an https request to a url and recieves json
+# Create a function that makes an https request to a url and recieves json
 def get_json(url, params):
     req = PreparedRequest()
     req.prepare_url(url, params)
     print(req.url)
     return requests.get(req.url).json()
 
+# Create bucket if it doesn't exist
 create_bucket("{}-{}".format(directory, account))
 
+# For each id, make a request to get the items for that id
 for id in get_json(ids_url, {'limit':  500})["items"]:
     simple_id = id['id'].replace("typeahead-suggestions#", "")
     #print(simple_id)
