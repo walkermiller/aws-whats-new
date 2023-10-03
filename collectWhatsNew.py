@@ -6,7 +6,7 @@ from urllib.parse import quote
 import json
 import logging
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s:%(levelname)s:%(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s:%(levelname)s | %(message)s')
 directory = "aws-whats-new"
 account = boto3.client('sts').get_caller_identity().get('Account')
 ids_url = "https://aws.amazon.com/api/dirs/typeahead-suggestions/items"
@@ -36,7 +36,7 @@ create_bucket("{}-{}".format(directory, account))
 # For each id, make a request to get the items for that id
 for id in get_json(ids_url, {'limit':  500})["items"]:
     simple_id = id['id'].replace("typeahead-suggestions#", "")
-    logging.info("Getting items for {}".format(simple_id))
+    logging.info("Gathering what is new for {}".format(simple_id))
     params = {
         'item.directoryId': 'whats-new',
         'sort_by': 'item.additionalFields.postDateTime',
@@ -45,8 +45,12 @@ for id in get_json(ids_url, {'limit':  500})["items"]:
         'item.locale': 'en_US',
         'tags.id': 'whats-new#general-products#{}'.format(simple_id)
     }
-
-    write_json(get_json(url=item_url, params=params), "{}-{}".format(directory, account), "{}.json".format(simple_id))
+    item_news = get_json(url=item_url, params=params)
+    if item_news['metadata']['totalHits'] > 0:
+        logging.info("Found {} items for {}".format(item_news['metadata']['totalHits'], simple_id))
+        write_json(item_news, "{}-{}".format(directory, account), "{}.json".format(simple_id))
+    else:
+        logging.info("No items found for {}".format(simple_id)
 
                                                                              
 
