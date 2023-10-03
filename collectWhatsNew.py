@@ -50,7 +50,7 @@ for id in get_json(ids_url, {'limit':  500})["items"]:
         logging.info("Found {} items for {}".format(item_news['metadata']['totalHits'], simple_id))
         write_json(item_news, "{}-{}".format(directory, account), "{}.json".format(simple_id))
     else:
-        logging.info("No items found for {}".format(simple_id)
+        logging.info("No items found for {}".format(simple_id))
 
                                                                              
 
