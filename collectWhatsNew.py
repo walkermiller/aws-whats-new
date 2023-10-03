@@ -24,16 +24,16 @@ def write_json(pjson, bucket_name, key):
 def get_json(url, params):
     req = PreparedRequest()
     req.prepare_url(url, params)
-    print(req.url)
+    # print(req.url)
     return requests.get(req.url).json()
 
-# Create bucket if it doesn't exist
+# Create bucket if it doesn't already exist
 create_bucket("{}-{}".format(directory, account))
 
 # For each id, make a request to get the items for that id
 for id in get_json(ids_url, {'limit':  500})["items"]:
     simple_id = id['id'].replace("typeahead-suggestions#", "")
-    #print(simple_id)
+    print(simple_id)
     params = {
         'item.directoryId': 'whats-new',
         'sort_by': 'item.additionalFields.postDateTime',
