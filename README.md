@@ -1,7 +1,7 @@
 # aws-whats-new
 
 ## Deploy as a scheduled lambda
-### Install SAM ClI
+### [Install SAM ClI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html)
 
 ### Build and Deploy
 ```
