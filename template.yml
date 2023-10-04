@@ -12,6 +12,17 @@ Resources:
     Properties:
       Architectures: ["arm64"]
       FunctionName: CollectWhatsNew
+      Policies:
+        - S3ReadPolicy:
+            BucketName: "*"
+        - S3WritePolicy:
+            BucketName: "aws-whats-new*"
+        - Version: '2012-10-17' # Policy Document
+          Statement:
+            - Effect: Allow
+              Action:
+                - s3:ListAllMyBuckets
+              Resource: "*"
       Events:
         ScheduleEvent:
           Type: ScheduleV2
