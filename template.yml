@@ -1,0 +1,22 @@
+Transform: AWS::Serverless-2016-10-31
+Globals:
+  Function:
+    Runtime: python3.11
+    Timeout: 360
+    Handler: collectWhatsNew.handler
+    Tracing: Active
+
+Resources:
+  CollectWhatsNewFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Architectures: ["arm64"]
+      FunctionName: CollectWhatsNew
+      Events:
+        ScheduleEvent:
+          Type: ScheduleV2
+          Properties:
+            ScheduleExpression: "rate(1 day)"
+            FlexibleTimeWindow:
+              Mode: FLEXIBLE
+              MaximumWindowInMinutes: 10

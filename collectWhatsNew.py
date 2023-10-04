@@ -31,7 +31,7 @@ def get_json(url, params):
     logging.debug(req.url)
     return requests.get(req.url).json()
 
-def handler():
+def handler(event, context):
     # Create bucket if it doesn't already exist
     create_bucket("{}-{}".format(directory, account))
 
@@ -62,6 +62,7 @@ def handler():
     end_time = time.time()
     logging.info("Time elapsed: {} seconds".format(end_time - start_time))
 
+# If main, execute handler
 if __name__ == "__main__":
-    handler()                                                                
+    handler(None, None)                                                               
 
